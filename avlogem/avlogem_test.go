@@ -3,6 +3,7 @@ package avlogem_test
 import (
 	"bytes"
 	"os"
+	"regexp"
 	"testing"
 	"time"
 
@@ -38,7 +39,7 @@ func TestLog(t *testing.T) {
 		avlogem.Log(map[string]interface{}{"foo": "bar"})
 	})
 
-	expected := `{"tag":"avlogem","time":"2023-01-01T00:00:00Z","data":{"foo":"bar"}}` + "\n"
+	expected := `{"tag":"avlogem","time":"2023-01-01T00:00:00Z","content":{"foo":"bar"}}` + "\n"
 	assert.Equal(t, expected, output)
 }
 
@@ -48,8 +49,11 @@ func TestLogLine(t *testing.T) {
 		avlogem.LogLine("hello world")
 	})
 
-	expected := `{"tag":"avlogem","time":"2023-01-01T00:00:00Z","data":"hello world"}` + "\n"
-	assert.Equal(t, expected, output)
+	// Regex: any path, any line number, but must end with 'called with: hello world'
+	pattern := `\{"tag":"avlogem","time":"2023-01-01T00:00:00Z","content":".*avlogem.go:[0-9]+ called with: hello world"\}\n`
+	matched, err := regexp.MatchString(pattern, output)
+	assert.NoError(t, err)
+	assert.True(t, matched, "output did not match pattern. Output: %s", output)
 }
 
 func TestBunch(t *testing.T) {
@@ -57,13 +61,13 @@ func TestBunch(t *testing.T) {
 	output := captureStdout(func() {
 		avlogem.Bunch().
 			Add("okay", 1).
-			Add("testing data", "two").
+			Add("testing content", "two").
 			Add("sample", Sample).
 			Add("sample.pointer", &Sample).
 			Add("nullish", nil).
 			Log()
 	})
 
-	expected := `{"tag":"avlogem","time":"2023-01-01T00:00:00Z","data":{"nullish":null,"okay":1,"sample":{"foo":"foo","bar":42},"sample.pointer":{"foo":"foo","bar":42},"testing data":"two"}}` + "\n"
+	expected := `{"tag":"avlogem","time":"2023-01-01T00:00:00Z","content":{"nullish":null,"okay":1,"sample":{"foo":"foo","bar":42},"sample.pointer":{"foo":"foo","bar":42},"testing content":"two"}}` + "\n"
 	assert.Equal(t, expected, output)
 }
