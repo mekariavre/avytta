@@ -6,6 +6,9 @@ import (
 	"time"
 )
 
+// NowFunc is a global function returning current time. Can be mocked in tests.
+var NowFunc = func() time.Time { return time.Now() }
+
 type LogEntry struct {
 	Tag  string      `json:"tag,omitempty"`
 	Time string      `json:"time"`
@@ -15,7 +18,7 @@ type LogEntry struct {
 func log(fields interface{}) {
 	entry := LogEntry{
 		Tag:  "avlogem",
-		Time: time.Now().Format(time.RFC3339),
+		Time: NowFunc().Format(time.RFC3339),
 		Data: fields,
 	}
 	if bts, err := json.Marshal(entry); err == nil {
