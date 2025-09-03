@@ -4,9 +4,9 @@ import (
 	"runtime"
 )
 
-// getCallerInfo returns the file and line of the caller of LogLine
+// getCallerInfo returns the file and line of the caller of LogStack
 func getCallerInfo() (pc uintptr, file string, line int, ok bool) {
-	// 2 skips: getCallerInfo -> LogLine -> user
+	// 2 skips: getCallerInfo -> LogStack -> user
 	return getCaller(2)
 }
 

@@ -5,7 +5,7 @@ A simple Go logging utility for structured and plain logs, with support for dete
 ## Features
 - Structured logging with JSON output
 - `Log(value interface{})` for logging any value
-- `LogLine(message string)` logs a message with caller file and line
+- `LogStack(message string)` logs a message with caller file information useful for logic path tracing
 - `Bunch()` for building up fields and logging them
 - Global `NowFunc` for mocking time in tests
 
@@ -18,7 +18,7 @@ import "github.com/mekariavre/avytta/avlogem"
 avlogem.Log(map[string]interface{}{ "foo": "bar" })
 
 // Log a stack message (includes caller file:line)
-avlogem.LogLine("hello world")
+avlogem.LogStack("hello world")
 
 // Log multiple fields
 avlogem.Bunch().Add("a", 1).Add("b", "two").Log()

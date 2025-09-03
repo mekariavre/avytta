@@ -43,10 +43,10 @@ func TestLog(t *testing.T) {
 	assert.Equal(t, expected, output)
 }
 
-func TestLogLine(t *testing.T) {
+func TestLogStack(t *testing.T) {
 	avlogem.NowFunc = NowFunc
 	output := captureStdout(func() {
-		avlogem.LogLine("hello world")
+		avlogem.LogStack("hello world")
 	})
 
 	// Regex: any path, any line number, but must end with 'called with: hello world'

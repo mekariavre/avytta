@@ -31,8 +31,8 @@ func Log(value interface{}) {
 	log(value)
 }
 
-// LogLine logs a message as a plain string (no fields), including caller file and line.
-func LogLine(message string) {
+// LogStack logs a message as a plain string (no fields), including caller file and line.
+func LogStack(message string) {
 	// Get caller info
 	_, file, line, ok := getCallerInfo()
 	var info string
